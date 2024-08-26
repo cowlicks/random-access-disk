@@ -190,6 +190,7 @@ impl RandomAccessDisk {
   pub async fn open(
     filename: impl AsRef<path::Path>,
   ) -> Result<RandomAccessDisk, RandomAccessError> {
+    dbg!();
     Self::builder(filename).build().await
   }
 
@@ -363,15 +364,18 @@ impl Builder {
 
   /// Build a [RandomAccessDisk] instance
   pub async fn build(self) -> Result<RandomAccessDisk, RandomAccessError> {
+    dbg!();
     if let Some(dirname) = self.filename.parent() {
       mkdirp::mkdirp(dirname)?;
     }
+    dbg!();
     let mut file = OpenOptions::new()
       .create(true)
       .read(true)
       .write(true)
       .open(&self.filename)
       .await?;
+    dbg!();
     file.sync_all().await?;
 
     set_sparse(&mut file).await?;
